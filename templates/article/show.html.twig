@@ -1,0 +1,172 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Article - {{ article.titre }}{% endblock %}
+
+{% block body %}
+    {% if article is defined %}
+
+             <div class="article-image" style="background-image: url('{{ asset('uploads/articles_image/' ~ article.image) }}')">
+                 <h2>{{ article.titre }}</h2>
+            </div>
+        <div class="article-content">
+            <p>{{ article.description }}</p>
+            <p>{{ article.contenu }}</p>
+        </div>
+
+
+        {% if is_granted('ROLE_USER') %}
+            <a href="{{ path('article_toggle_favori', {'id': article.id}) }}" class="btn btn-primary">
+                {% if article in app.user.favoris %}
+                    Retirer des favoris
+                {% else %}
+                    Ajouter aux favoris
+                {% endif %}
+            </a>
+        {% endif %}
+
+        <h2>Commentaires</h2>
+
+        {% macro display_comments(comments, depth = 0) %}
+            {% import _self as macros %}
+            {% for commentaire in comments %}
+                {% if depth == 0 and not commentaire.commentaireParent %}
+                    <div class="commentaire depth-{{ depth }}{{ depth > 0 ? ' reply' : '' }}">
+                        <div class="comment-text">
+                            <strong>{{ commentaire.utilisateur.username }}</strong> {{ commentaire.contenu }}
+                            <span class="creation-time">{{ commentaire.dateCreation|date('Y-m-d H:i:s') }}</span>
+                        </div>
+                        {% if commentaire.reponses|length > 0 %}
+                            <div class="replies">
+                                {{ macros.display_comments(commentaire.reponses, depth + 1) }}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% elseif depth > 0 %}
+                    <div class="commentaire depth-{{ depth }} reply">
+                        <div class="comment-text">
+                            <strong>{{ commentaire.utilisateur.username }}</strong>: {{ commentaire.contenu }}
+                            <span class="creation-time">{{ commentaire.dateCreation|date('Y-m-d H:i:s') }}</span>
+                        </div>
+                        {% if commentaire.reponses|length > 0 %}
+                            <div class="replies">
+                                {{ macros.display_comments(commentaire.reponses, depth + 1) }}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% else %}
+                <p>Aucun commentaire pour le moment.</p>
+            {% endfor %}
+        {% endmacro %}
+
+        {{ _self.display_comments(article.commentaires) }}
+
+
+
+
+        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            <h2>Ajouter un commentaire</h2>
+
+            {% if comment_form is defined %}
+                {{ form_start(comment_form) }}
+                {{ form_row(comment_form.contenu) }}
+                {{ form_row(comment_form.commentaire_parent) }}
+                {{ form_end(comment_form) }}
+            {% else %}
+                <p>Le formulaire de commentaire n'est pas disponible.</p>
+            {% endif %}
+
+            {% block stylesheets %}
+                <style>
+                    .article-image
+                    {
+                        background-size: cover;
+                        background-position: center;
+                        height: 300px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        color: white;
+                        text-shadow: 2px 2px 4px #000000;
+                    }
+                </style>
+            {% endblock %}
+
+        {% endif %}
+
+
+    {% else %}
+        <p>Cet article n'existe pas.</p>
+    {% endif %}
+    {% endblock %}
+
+
+
+
+
+
+
+
+
+{#{% block body %}#}
+{#    {% if article %}#}
+{#        <div class="article-image" style="background-image: url('{{ asset('uploads/articles/' ~ article.image) }}')">#}
+{#            <h2>{{ article.titre }}</h2>#}
+{#        </div>#}
+{#        <div class="article-content">#}
+{#            <p>{{ article.description }}</p>#}
+{#            <p>{{ article.contenu }}</p>#}
+{#        </div>#}
+
+{#        {% if is_granted('ROLE_USER') %}#}
+{#            <a href="{{ path('article_toggle_favori', {'id': article.id}) }}" class="btn btn-primary">#}
+{#                {% if article in app.user.favoris %}#}
+{#                    Retirer des favoris#}
+{#                {% else %}#}
+{#                    Ajouter aux favoris#}
+{#                {% endif %}#}
+{#            </a>#}
+{#        {% endif %}#}
+
+{#        <section class="comments">#}
+{#            <h2>Commentaires</h2>#}
+{#            {% for commentaire in article.commentaires %}#}
+{#                <div class="commentaire">#}
+{#                    <strong>{{ commentaire.utilisateur.username }}</strong> dit :#}
+{#                    <p>{{ commentaire.contenu }}</p>#}
+{#                    <span class="creation-time">Posté le : {{ commentaire.dateCreation|date('Y-m-d H:i:s') }}</span>#}
+{#                </div>#}
+{#            {% else %}#}
+{#                <p>Aucun commentaire pour le moment.</p>#}
+{#            {% endfor %}#}
+
+{#            {% if is_granted('IS_AUTHENTICATED_FULLY') %}#}
+{#                <div class="add-comment">#}
+{#                    <h3>Ajouter un commentaire</h3>#}
+{#                    {{ form_start(comment_form) }}#}
+{#                    {{ form_row(comment_form.contenu) }}#}
+{#                    {{ form_row(comment_form.commentaire_parent) }}#}
+{#                    <button class="btn btn-success">Envoyer</button>#}
+{#                    {{ form_end(comment_form) }}#}
+{#                </div>#}
+{#            {% endif %}#}
+{#        </section>#}
+{#    {% else %}#}
+{#        <p>Cet article n'existe pas.</p>#}
+{#    {% endif %}#}
+{#{% endblock %}#}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

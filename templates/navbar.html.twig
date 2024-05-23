@@ -1,0 +1,29 @@
+{# templates/base.html.twig #}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    {% block stylesheets %}{% endblock %}
+</head>
+<body>
+<nav>
+    <ul>
+        <li><a href="{{ path('home_index') }}">home</a></li>
+        <li><a href="{{ path('app_register') }}">Register</a></li>
+        <li><a href="{{ path('app_login') }}">Login</a></li>
+        <li><a href="{{ path('article_index') }}">Articles</a></li>
+        {% if is_granted('ROLE_SUPER_ADMIN') %}
+            <li><a href="{{ path('admin_index') }}">Admin Page</a></li>
+        {% endif %}
+        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            <li><a href="{{ path('profile_index') }}">Profile</a></li>
+        {% endif %}
+
+
+    </ul>
+</nav>
+{% block body %}{% endblock %}
+{% block javascripts %}{% endblock %}
+</body>
+</html>

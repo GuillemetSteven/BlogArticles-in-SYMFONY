@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+
+
+{% for emoji in emojis %}
+    <a href="#" class="reaction-button" data-emoji-id="{{ emoji.id }}">
+        <i class="fas fa-{{ emoji.type }}"></i>
+    </a>
+{% endfor %}

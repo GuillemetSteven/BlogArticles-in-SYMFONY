@@ -1,0 +1,146 @@
+{# templates/admin/index.html.twig#}
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h2>Liste des utilisateurs</h2>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Email</th>
+                <th scope="col">Rôles</th>
+                <th scope="col">Actions</th>
+                <th scope="col">Supprimer</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.roles|join(', ') }}</td>
+                    <td>
+                        {% if 'ROLE_SUPER_ADMIN' not in user.roles %}
+                            <a href="{{ path('promote_to_admin', {'id': user.id}) }}" class="btn btn-primary btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir octroyer les droits d\'administrateur à cet utilisateur ?')">Promouvoir en admin</a>
+                        {% else %}
+                            <a href="{{ path('demote_from_admin', {'id': user.id}) }}" class="btn btn-warning btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir retirer les droits d\'administrateur à cet utilisateur ?')">Retirer les droits d'admin</a>
+                            <input type="hidden" name="_token" value="{{ csrf_token('demote_from_admin' ~ user.id) }}">
+                        {% endif %}
+                    </td>
+                    <td>
+                        <form method="post" action="{{ path('admin_delete_user', {'id': user.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+                            <button type="submit" class="btn btn-danger btn-sm ici">Supprimer</button>
+                        </form>
+
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4" class="text-center">Aucun utilisateur trouvé.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <h2 class="mt-5">Liste des articles</h2>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Titre</th>
+                <th scope="col">Date de création</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for article in articles %}
+                <tr>
+                    <td>{{ article.titre }}</td>
+                    <td>{{ article.dateCreation|date('Y-m-d H:i') }}</td>
+                    <td>
+                        <a href="{{ path('article_edit', {'id': article.id}) }}" class="btn btn-primary btn-sm">Éditer</a>
+                        <form method="post" action="{{ path('admin_article_delete', {'id': article.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet article?');" style="display: inline-block;">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ article.id) }}">
+                            <button type="submit" class="btn btn-danger btn-sm ici">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3" class="text-center">Aucun article trouvé.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .table {
+            width: 100%;
+            margin-top: 10px;
+            border-collapse: collapse;
+        }
+
+        .table th, .table td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .btn {
+            font-size: 0.875rem;
+            padding: 5px 10px;
+            border-radius: 4px;
+            line-height: 1.5;
+            margin-right: 5px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            color: black;
+        }
+
+        .btn-info {
+            background-color: #17a2b8;
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover, .btn-primary:hover, .btn-warning:hover, .btn-info:hover {
+            opacity: 0.85;
+        }
+    </style>
+{% endblock %}
+
+
+

@@ -1,0 +1,131 @@
+:root {
+    --background-color: #699dd2;
+    --primary-color: #5e72e4;
+    --secondary-color: #11cdef;
+    --border-color: #dcdcdc;
+    --text-color: #32325d;
+    --text-secondary-color: #8898aa;
+    --border-radius: 0.5rem;
+    --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --transition-speed: 0.35s;
+
+    /* Dégradé pour les réponses */
+    --reply-level-1-background: #e6f0ff;
+    --reply-level-2-background: #ccdfff;
+    --reply-level-3-background: #b3ceff;
+    --reply-border-color: #8ba8d7;
+}
+
+html{
+    background-color: var(--background-color);
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: 'Open Sans', sans-serif;
+    line-height: 1.5;
+    margin: 0;
+    padding: 1rem;
+}
+
+h1, h2, p {
+    margin: 0 0 1rem 0;
+}
+
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+/* Boutons */
+.btn {
+    display: inline-block;
+    padding: 0.75rem 1.25rem;
+    border-radius: var(--border-radius);
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-reply {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+/* Commentaires et réponses */
+.commentaire {
+    background-color: var(--reply-level-1-background);
+    /*border-radius: var(--border-radius); */
+    box-shadow: var(--box-shadow);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-left: 4px solid var(--primary-color);
+}
+
+.comment-text {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.creation-time {
+    color: var(--text-secondary-color);
+    font-size: 0.875rem;
+}
+
+/* Réponses à différents niveaux */
+.commentaire.depth-0 {
+    background-color: var(--reply-level-1-background);
+}
+
+.commentaire.depth-1 {
+    background-color: var(--reply-level-2-background);
+    border-left-color: var(--reply-border-color);
+}
+
+.commentaire.depth-2 {
+    background-color: var(--reply-level-3-background);
+    border-left-color: var(--reply-border-color);
+}
+
+/* Ajouter plus de niveaux de profondeur si nécessaire */
+
+/* Réponses imbriquées */
+.replies {
+    margin-left: 2rem;
+    border-left: 3px solid var(--reply-border-color);
+    padding-left: 1rem;
+}
+
+/* Styles des formulaires */
+form {
+    margin-top: 1rem;
+}
+
+textarea {
+    width: 60%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid #e3e3e3;
+    /* border-radius: var(--border-radius); */
+    resize: vertical;
+}
+
+input[type="submit"], button {
+    width: auto;
+    padding: 0.5rem 1rem;
+}
+
+/* Formulaires de réponse cachés */
+.reply-form {
+    display: none;
+    flex-direction: column;
+}

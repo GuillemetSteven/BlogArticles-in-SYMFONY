@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+    <h1>Register</h1>
+
+    {{ form_start(registrationForm) }}
+
+    {{ form_row(registrationForm.username,
+        {
+            label: 'Username',
+            attr:
+            {
+                placeholder: 'Usermane'
+            }
+        })
+    }}
+
+    {{ form_row(registrationForm.email,
+        {
+            label: 'Email',
+            attr:
+            {
+                placeholder: 'Email'
+            }
+        })
+    }}
+
+
+
+    {{ form_row(registrationForm.plainPassword.first,
+        {
+        label: 'Password',
+        attr:
+        {
+            placeholder: 'Password'
+        }
+        })
+    }}
+
+    {{ form_row(registrationForm.plainPassword.second,
+        {
+        label: 'Repeat Password',
+        attr:
+        {
+            placeholder: 'Confirmer'
+        }
+        })
+    }}
+
+    <button type="submit" class="btn btn-primary">Register</button>
+
+    {{ form_end(registrationForm) }}
+
+    <br> <br>
+
+    <a href="{{ path('app_login') }}">Accéder à la page de connexion</a>
+{% endblock %}

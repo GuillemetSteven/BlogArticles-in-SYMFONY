@@ -1,0 +1,129 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <!-- Menu déroulant pour le filtre de catégorie -->
+        <form id="category-filter" class="mb-3">
+            <select id="category-select" onchange="filterByCategory()" class="form-select">
+                <option value="">Toutes les catégories</option>
+                {% for categorie in categories %}
+                    <option value="{{ categorie.id }}" {% if selectedCategoryId == categorie.id %}selected{% endif %}>
+                        {{ categorie.nom }}
+                    </option>
+                {% endfor %}
+            </select>
+        </form>
+
+        <!-- Grille des articles -->
+        <div class="grid">
+            {% for article in articles %}
+                <div class="grid-item" data-category-id="{{ article.categorie.id }}">
+                    <div class="card">
+                        <img src="{{ asset('uploads/articles_image/' ~ article.image) }}" class="card-img" alt="{{ article.titre }}">
+                        <div class="card-img-overlay">
+                            <h5 class="card-title">
+                                <a href="{{ path('article_show', {'id': article.id}) }}" class="text-white stretched-link">{{ article.titre }}</a>
+                            </h5>
+                            <p class="card-text">{{ article.description|slice(0, 100) ~ '...' }}</p>
+                        </div>
+                    </div>
+                    <p>Clique sur le titre pour être redirigé vers l'article!</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        function filterByCategory() {
+            var selectedCategory = document.getElementById('category-select').value;
+            var articles = document.querySelectorAll('.grid-item');
+
+            articles.forEach(function(article) {
+                var articleCategory = article.getAttribute('data-category-id');
+                if(selectedCategory === "" || articleCategory === selectedCategory) {
+                    article.style.display = 'block';
+                } else {
+                    article.style.display = 'none';
+                }
+            });
+        }
+    </script>
+{% endblock %}
+
+
+    {% block stylesheets %}
+        {{ parent() }}
+        <style>
+            body {
+                font-family: 'Arial', sans-serif;
+                color: #333;
+                background-color: #699dd2;
+                margin: 0;
+                padding: 0;
+                line-height: 1.6;
+            }
+
+            .container {
+                max-width: 1200px;
+                margin: auto;
+                padding: 2rem;
+            }
+
+            .grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 1rem;
+            }
+
+            .grid-item {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .card {
+                background-color: #222;
+                color: #fff;
+                border-radius: 0.25rem;
+                overflow: hidden;
+                position: relative;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            }
+
+            .card-img {
+                width: 100%;
+                height: auto;
+                object-fit: cover;
+                transition: transform 0.3s ease;
+            }
+
+            .card-img:hover {
+                transform: scale(1.05);
+            }
+
+            .card-title {
+                font-size: 1.5rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .card-text {
+                font-size: 1rem;
+            }
+
+            /* Responsive adjustments */
+            @media (max-width: 767px) {
+                .card-img {
+                    height: 150px;
+                }
+            }
+        </style>
+    {% endblock %}

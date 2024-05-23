@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block body_class %}profile-page{% endblock %}
+
+{% block additional_styles %}
+    <link rel="stylesheet" href="{{ asset('styles/profile_styles.css') }}">
+{% endblock %}
+
+{% block body %}
+    <h1>Bienvenue, {{ app.user.username }}!</h1>
+    <div class="user-profile">
+        <img src="{{ asset('images/profiles/' ~ (app.user.userProfileImage ?: 'default.png')) }}" alt="Image de profil">
+        <div>Vos favoris:</div>
+        <ul>
+            {% for favori in app.user.favoris %}
+                <li>{{ favori.article.titre }}</li>
+            {% endfor %}
+        </ul>
+        <a href="{{ path('profile_edit') }}">Modifier le profil</a>
+        <a href="{{ path('app_logout') }}">Déconnexion</a>
+    </div>
+{% endblock %}

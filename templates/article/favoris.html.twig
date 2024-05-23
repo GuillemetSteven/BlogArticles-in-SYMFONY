@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes favoris{% endblock %}
+
+{% block body %}
+    <h1>Mes favoris</h1>
+
+    {% if favoris is empty %}
+        <p>Vous n'avez pas encore ajouté de favoris.</p>
+    {% else %}
+        <ul>
+            {% for favori in favoris %}
+                <li>
+                    <a href="{{ path('article_show', {'id': favori.article.id}) }}">{{ favori.article.titre }}</a>
+                    <small>Ajouté le {{ favori.dateCreation|date('d/m/Y à H:i') }}</small>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

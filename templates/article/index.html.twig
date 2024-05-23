@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des articles{% endblock %}
+
+{% block body %}
+    <h1>Liste des articles</h1>
+
+    {% if is_granted('ROLE_SUPER_ADMIN') %}
+        <a href="{{ path('article_new') }}" class="btn btn-primary">Créer un nouvel article</a>
+    {% endif %}
+
+
+    <ul>
+        {% for article in articles %}
+            <li>
+                <a href="{{ path('article_show', {'id': article.id}) }}">{{ article.titre }}</a>
+            </li>
+        {% else %}
+            <li>Aucun article disponible.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
